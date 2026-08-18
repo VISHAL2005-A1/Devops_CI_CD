@@ -13,10 +13,10 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
-    "@repo/db": "workspace:*",
     "@repo/typescript-config": "workspace:^"
   },
   "dependencies": {
+    "@repo/db": "workspace:*",
     "@types/ws": "^8.18.1",
     "ws": "^8.21.3"
   }

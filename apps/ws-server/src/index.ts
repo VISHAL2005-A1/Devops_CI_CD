@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws";
-import {client} from"@repo/db";
+import db from"@repo/db";
 const wss=new WebSocketServer({
     port:3001,
 })
@@ -7,7 +7,7 @@ const wss=new WebSocketServer({
 wss.on("connection",async(socket)=>{
 
     try{
-        await client.user.create({
+        await db.user.create({
             data:{
                 username:Math.random().toString(),
                 password:Math.random().toString(),

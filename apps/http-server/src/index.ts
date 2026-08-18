@@ -1,5 +1,5 @@
 import express from "express";
-import {client} from"@repo/db";
+import db from"@repo/db";
 
 const app=express();
 app.use(express.json());
@@ -13,7 +13,7 @@ app.post("/signup",async(req,res)=>{
             })
         }
 
-        const user=await client.user.create({
+        const user=await db.user.create({
             data:{
                 username,
                 password,
