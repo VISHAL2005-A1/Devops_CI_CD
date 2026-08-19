@@ -35,7 +35,7 @@ app.post("/signup",async(req,res)=>{
 })
 
 app.get("/",(req,res)=>{
-    res.send("Hi there!")
+    res.send("Hi there! Vishal")
 })
 
 app.listen(3000);
