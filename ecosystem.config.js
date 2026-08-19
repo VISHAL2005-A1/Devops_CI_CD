@@ -1,28 +1,33 @@
 module.exports = {
   apps: [
     {
-      name: "web",
-      cwd: "/home/ubuntu/Devops_CI_CD/apps/web",
+      name: "http-server",
+      cwd: "./apps/http-server",
+      script: "dist/index.js",
+      env: {
+        NODE_ENV: "production",
+        PORT: 3000
+      }
+    },
+
+    {
+      name: "web-server",
+      cwd: "./apps/web",
       script: "pnpm",
       args: "start",
       env: {
-        NODE_ENV: "production"
+        NODE_ENV: "production",
+        PORT: 3001
       }
     },
-    {
-      name: "http-server",
-      cwd: "/home/ubuntu/Devops_CI_CD/apps/http-server",
-      script: "dist/index.js",
-      env: {
-        NODE_ENV: "production"
-      }
-    },
+
     {
       name: "ws-server",
-      cwd: "/home/ubuntu/Devops_CI_CD/apps/ws-server",
+      cwd: "./apps/ws-server",
       script: "dist/index.js",
       env: {
-        NODE_ENV: "production"
+        NODE_ENV: "production",
+        PORT: 4000
       }
     }
   ]
