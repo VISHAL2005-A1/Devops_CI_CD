@@ -20,37 +20,49 @@ jobs:
           script: |
             set -e
 
-            echo "Going to project..."
-            cd ~/Devops_CI_CD
+            echo "===== SERVER ====="
+            whoami
+            pwd
 
-            echo "Pulling latest code..."
+            echo "===== PROJECT ====="
+            cd ~/Devops_CI_CD
+            git status
+            git branch
+
+            echo "===== PULL MAIN ====="
             git fetch origin
             git reset --hard origin/main
 
-            echo "Installing dependencies..."
+            echo "===== NODE ====="
+            node -v
+            pnpm -v
+
+            echo "===== INSTALL ====="
             pnpm install
 
-            echo "Generating Prisma Client..."
+            echo "===== PRISMA ====="
             pnpm --filter @repo/db generate
 
-            echo "Building DB package..."
+            echo "===== DB BUILD ====="
             pnpm --filter @repo/db build
 
-            echo "Building Next.js..."
-            cd apps/web
+            echo "===== WEB BUILD ====="
+            cd ~/Devops_CI_CD/apps/web
             pnpm build
 
-            echo "Building HTTP server..."
-            cd ../http-server
+            echo "===== HTTP BUILD ====="
+            cd ~/Devops_CI_CD/apps/http-server
             pnpm build
 
-            echo "Building WebSocket server..."
-            cd ../ws-server
+            echo "===== WS BUILD ====="
+            cd ~/Devops_CI_CD/apps/ws-server
             pnpm build
 
-            echo "Restarting PM2..."
+            echo "===== PM2 ====="
+            pm2 list
+
             pm2 restart web-server
             pm2 restart http-server
             pm2 restart ws-server
 
-            echo "Deployment successful!"
+            echo "===== DEPLOYMENT SUCCESS ====="
