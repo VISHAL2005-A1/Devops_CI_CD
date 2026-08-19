@@ -39,7 +39,7 @@ app.post("/signup", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.send("Hi there! Vishal");
+    res.send("CI/CD is working");
 });
 
 const PORT = process.env.PORT || 3000;
