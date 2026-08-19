@@ -1,45 +1,68 @@
-name: CI/CD Pipeline
+name: Deploy to Ubuntu
 
-# 1. Trigger the pipeline on git push to the main branch
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  # --- CI STAGE: Test the code ---
-  test-and-build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js (or Python/Go/etc.)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Run Tests
-        run: npm test
-
-  # --- CD STAGE: Deploy to Ubuntu Production Server ---
   deploy:
-    needs: test-and-build # Only deploy if tests pass
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
 
-      - name: Deploy to Ubuntu Server via SSH
-        uses: appleboy/ssh-action@v1.0.3
+    steps:
+      - name: Deploy to Ubuntu
+        uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.SERVER_IP }}
+          host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+
           script: |
-            cd /var/www/my-app
-            git pull origin main
-            npm install --production
-            pm2 restart all
+            set -e
+
+            echo "===== SERVER ====="
+            whoami
+            pwd
+
+            echo "===== PROJECT ====="
+            cd ~/Devops_CI_CD
+            git status
+            git branch
+
+            echo "===== PULL MAIN ====="
+            git fetch origin
+            git reset --hard origin/main
+
+            echo "===== NODE ====="
+            node -v
+            pnpm -v
+
+            echo "===== INSTALL ====="
+            pnpm install
+
+            echo "===== PRISMA ====="
+            pnpm --filter @repo/db generate
+
+            echo "===== DB BUILD ====="
+            pnpm --filter @repo/db build
+
+            echo "===== WEB BUILD ====="
+            cd ~/Devops_CI_CD/apps/web
+            pnpm build
+
+            echo "===== HTTP BUILD ====="
+            cd ~/Devops_CI_CD/apps/http-server
+            pnpm build
+
+            echo "===== WS BUILD ====="
+            cd ~/Devops_CI_CD/apps/ws-server
+            pnpm build
+
+            echo "===== PM2 ====="
+            pm2 list
+
+            pm2 restart web-server
+            pm2 restart http-server
+            pm2 restart ws-server
+
+            echo "===== DEPLOYMENT SUCCESS ====="
