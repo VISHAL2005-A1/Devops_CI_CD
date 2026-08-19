@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev --port 3001",
     "build": "next build",
-    "start": "next start --port 3001 ",
+    "start": "next start --port 3001",
     "lint": "eslint --max-warnings 0",
     "check-types": "next typegen && tsc --noEmit"
   },
@@ -26,7 +26,7 @@
     "eslint": "^9.39.1",
     "typescript": "5.9.2"
   },
-  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/create-next-app).",
+  "description": "This is a Next.js project",
   "main": "eslint.config.js",
   "keywords": [],
   "author": "",

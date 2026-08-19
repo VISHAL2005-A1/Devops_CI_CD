@@ -1,41 +1,49 @@
 import express from "express";
-import db from"@repo/db";
+import db from "@repo/db";
 
-const app=express();
+const app = express();
+
 app.use(express.json());
 
-app.post("/signup",async(req,res)=>{
-    try{
-        const{username,password}=req.body;
-        if(!username||!password){
+app.post("/signup", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        if (!username || !password) {
             return res.status(400).json({
-                message:"Username and password are required"
-            })
+                message: "Username and password are required",
+            });
         }
 
-        const user=await db.user.create({
-            data:{
+        const user = await db.user.create({
+            data: {
                 username,
                 password,
-            }
+            },
         });
-        return res.status(500).json({
-            message:"User created successfully",
-            user:{
-                id:user.id,
-                username:user.username,
-            }
+
+        return res.status(201).json({
+            message: "User created successfully",
+            user: {
+                id: user.id,
+                username: user.username,
+            },
         });
-    }catch(error){
-        console.log(error);
+    } catch (error) {
+        console.error(error);
+
         return res.status(500).json({
-            message:"Something went wrong",
-        })
+            message: "Something went wrong",
+        });
     }
-})
+});
 
-app.get("/",(req,res)=>{
-    res.send("Hi there! Vishal")
-})
+app.get("/", (req, res) => {
+    res.send("Hi there! Vishal");
+});
 
-app.listen(3000);
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`HTTP server running on port ${PORT}`);
+});
